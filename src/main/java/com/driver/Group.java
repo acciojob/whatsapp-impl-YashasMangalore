@@ -5,6 +5,10 @@ public class Group
     private String name;
     private int numberOfParticipants;
 
+    public Group() {
+
+    }
+
     public String getName()
     {
         return name;
@@ -13,6 +17,12 @@ public class Group
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public Group(String name, int numberOfParticipants)
+    {
+        this.name = name;
+        this.numberOfParticipants = numberOfParticipants;
     }
 
     public int getNumberOfParticipants()

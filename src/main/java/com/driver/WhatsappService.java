@@ -2,6 +2,7 @@ package com.driver;
 
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,11 +11,7 @@ public class WhatsappService {
     WhatsappRepository whatsappRepository = new WhatsappRepository();
 
     public String createUser(String name, String mobile) throws Exception {
-        String result = whatsappRepository.createUser(name, mobile);
-        if(result == null) {
-            throw new Exception("User already exists");
-        }
-        return result;
+        return whatsappRepository.createUser(name, mobile);
     }
 
     public Group createGroup(List<User> users){
@@ -33,13 +30,7 @@ public class WhatsappService {
     public int sendMessage(Message message, User sender, Group group) throws Exception{
         //Throw "Group does not exist" if the mentioned group does not exist
         //Throw "You are not allowed to send message" if the sender is not a member of the group
-        if(!whatsappRepository.isPresent(group)){
-            throw new Exception("Group does not exist");
-        }
-        List<User> users = whatsappRepository.getGroupUsersList(group);
-        if(!users.contains(sender)){
-            throw new Exception("You are not allowed to send message");
-        }
+
         return  whatsappRepository.sendMessage(message, sender, group);
     }
 
@@ -48,17 +39,6 @@ public class WhatsappService {
         //Throw "Group does not exist" if the mentioned group does not exist
         //Throw "Approver does not have rights" if the approver is not the current admin of the group
         //Throw "User is not a participant" if the user is not a part of the group
-        if(!whatsappRepository.isPresent(group)){
-            throw new Exception("Group does not exist");
-        }
-        User admin = whatsappRepository.getAdmin(group);
-        if(!admin.equals(approver)){
-            throw new Exception("Approver does not have rights");
-        }
-        List<User> users = whatsappRepository.getGroupUsersList(group);
-        if(!users.contains(user)){
-            throw new Exception("User is not a participant");
-        }
         return whatsappRepository.changeAdmin(approver, user, group);
     }
 
